@@ -6,51 +6,44 @@ package:
   version: {{ version }}
 
 source:
-  url: https://files.pythonhosted.org/packages/source/{{ name[0] }}/{{ name }}/cylp-{{ version }}.tar.gz
-  sha256: 3dd0e096999d91f7d2057d706f3f42bfe9f34ec33f8e0194529c5f8f06224cfd
-
-build:
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 0
-  skip: true  # [win]
+  url: https://github.com/coin-or/CyLP/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: f0accddc7b7137d5b173feb0f39f33cef4ee19b2474f6d753a4c568301274399
 
 requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ stdlib('c') }}
   host:
     - python
-    - setuptools
-    - cython
-    - numpy <2.0.0
-    - hypothesis
     - pip
+    - setuptools
+    - cython >=3.0.10,<3.4
+    - numpy
     - coin-or-cbc
-    - coin-or-utils
+    - coin-or-cgl
     - coin-or-clp
     - coin-or-osi
-    - coin-or-cgl
-    - coin-or-cbc
+    - coin-or-utils
   run:
     - python
-    - numpy >=1.5.0,<2.0.0
+    - numpy >=1.26.0
     - scipy >=0.10.0
-    - hypothesis
     - coin-or-cbc
-    - coin-or-utils
+    - coin-or-cgl
     - coin-or-clp
     - coin-or-osi
-    - coin-or-cgl
-    - coin-or-cbc
+    - coin-or-utils
 
 test:
-  imports:
-    - cylp
-  commands:
-    - pip check
+  source_files:
+    - cylp/tests
+    - cylp/input
   requires:
     - pip
+    - pytest
+  imports:
+    - cylp
+    - cylp.cy
+  commands:
+    - pip check
+    - pytest cylp/tests
 
 about:
   home: https://github.com/coin-or/cylp
